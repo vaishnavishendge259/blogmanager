@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import com.vaishnavi.blogmangersystem.model.Blog;
 import com.vaishnavi.blogmangersystem.model.CustomList;
@@ -235,15 +236,26 @@ public class ApplicationFlow {
     private void displayAllBlogs() {
 
         List<Blog> blogs = blogService.getAllBlogs();
-
         if (blogs.isEmpty()) {
             System.out.println("No blogs available.");
             return;
         }
+        System.out.println("\n==============================================================");
+        System.out.println("                         ALL BLOGS");
+        System.out.println("==============================================================");
+        System.out.printf("%-10s %-40s %-15s%n",
+                "Blog ID", "Title", "Date");
+
+        System.out.println("--------------------------------------------------------------");
 
         for (Blog blog : blogs) {
-            System.out.println(blog);
+            System.out.printf("%-10d %-40s %-15s%n",
+                    blog.getBlogId(),
+                    blog.getTitle(),
+                    blog.getDate());
+
         }
+        System.out.println("--------------------------------------------------------------");
     }
 
     private void viewBlogDetails() {
@@ -376,10 +388,26 @@ public class ApplicationFlow {
             System.out.println("No custom lists available.");
             return;
         }
+        System.out.println("\n==============================================================");
+        System.out.println("                       CUSTOM LISTS");
+        System.out.println("==============================================================");
+
+        System.out.printf("%-10s %-25s %-25s%n",
+                "List ID", "List Name", "Blog IDs");
+
+        System.out.println("--------------------------------------------------------------");
 
         for (CustomList list : lists) {
-            System.out.println(list);
+            String blogIds = list.getBlogIds().stream()
+                    .sorted()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(", "));
+            System.out.printf("%-10d %-25s %-25s%n",
+                    list.getListId(),
+                    list.getListName(),
+                    blogIds);
         }
+        System.out.println("--------------------------------------------------------------");
     }
 
     private void deleteList() {
